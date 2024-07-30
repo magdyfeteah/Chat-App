@@ -12,6 +12,8 @@ import { db } from "../../lib/firebase";
 import { useDispatch, useSelector } from "react-redux";
 import upload from "../../lib/upload";
 import { uiActions } from "../../Store/uiSlice";
+import { formatDistanceToNow } from "date-fns";
+
 function Chat() {
   const [open, setOpen] = useState(false);
   const [text, setText] = useState("");
@@ -21,11 +23,13 @@ function Chat() {
     url: "",
   });
 
-  const {chatId , user , isCurrentUserBlocked ,isReceiverBlocked} = useSelector((state) => state.chat);
+  const { chatId, user, isCurrentUserBlocked, isReceiverBlocked } = useSelector(
+    (state) => state.chat
+  );
 
   const currentUser = useSelector((state) => state.user.user);
   const endRef = useRef(null);
-const dispatch = useDispatch()
+  const dispatch = useDispatch();
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
@@ -103,11 +107,12 @@ const dispatch = useDispatch()
     });
     setText("");
   };
+
   return (
     <div className="chat">
       <div className="top">
         <div className="user">
-          <img src={user?.avatar ||"./avatar.png" } alt="" />
+          <img src={user?.avatar || "./avatar.png"} alt="" />
           <div className="texts">
             <span>{user?.username}</span>
             <p>Lorem ipsum, dolor sit amet.</p>
@@ -116,13 +121,17 @@ const dispatch = useDispatch()
         <div className="icons">
           <img src="./phone.png" alt="" />
           <img src="./video.png" alt="" />
-          <img src="./info.png" alt=""  onClick={e=> dispatch(uiActions.handleDetail())}/>
+          <img
+            src="./info.png"
+            alt=""
+            onClick={(e) => dispatch(uiActions.handleDetail())}
+          />
         </div>
       </div>
       <div className="center">
-        {chat?.messages?.map((message) => (
+        {chat?.messages?.map((message, index) => (
           <div
-            key={message.createAt}
+            key={index}
             className={
               message.senderId === currentUser?.id ? "message own" : "message"
             }
@@ -130,7 +139,7 @@ const dispatch = useDispatch()
             <div className="texts">
               {message.img && <img src={message.img} alt="" />}
               <p>{message.text}</p>
-              {/* <span>{message.createAt}</span> */}
+              <span>{formatDistanceToNow(message.createdAt.toDate(), { addSuffix: true })}</span>
             </div>
           </div>
         ))}
@@ -160,10 +169,14 @@ const dispatch = useDispatch()
         <input
           type="text"
           name=""
-          placeholder={isCurrentUserBlocked ||isReceiverBlocked ? "You cannot send a message" : "Type a message..."}
+          placeholder={
+            isCurrentUserBlocked || isReceiverBlocked
+              ? "You cannot send a message"
+              : "Type a message..."
+          }
           onChange={(e) => setText(e.target.value)}
           value={text}
-          disabled={isCurrentUserBlocked ||isReceiverBlocked}
+          disabled={isCurrentUserBlocked || isReceiverBlocked}
         />
         <div className="emoji">
           <img
@@ -175,7 +188,11 @@ const dispatch = useDispatch()
             <EmojiPicker open={open} onEmojiClick={handleEmoji} />
           </div>
         </div>
-        <button className="sendButton" onClick={handleSend} disabled={isCurrentUserBlocked ||isReceiverBlocked}>
+        <button
+          className="sendButton"
+          onClick={handleSend}
+          disabled={isCurrentUserBlocked || isReceiverBlocked}
+        >
           Send
         </button>
       </div>

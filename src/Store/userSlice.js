@@ -5,6 +5,7 @@ import { db } from "../lib/firebase";
 const initialState = {
   user: null,
   isLoading: true,
+  editUser : false
 };
 
 const userSlice = createSlice({
@@ -18,6 +19,9 @@ const userSlice = createSlice({
     setLoading(state, action) {
       state.isLoading = action.payload;
     },
+    changeUser(state){
+      state.editUser= !state.editUser
+    }
   },
 });
 
@@ -43,6 +47,6 @@ export const fetchUserInfo = (uid) => {
   };
 };
 
-export const { setUser, setLoading } = userSlice.actions;
+export const { setUser, setLoading,changeUser } = userSlice.actions;
 
 export default userSlice;

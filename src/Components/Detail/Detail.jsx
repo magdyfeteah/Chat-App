@@ -85,14 +85,7 @@ function Detail() {
             ? "User   Blocked"
             : "Block user"}
         </button>
-        <button
-          className="logout"
-          onClick={() => {
-            auth.signOut();
-          }}
-        >
-          Logout
-        </button>
+       
       </div>
     </div>
   );

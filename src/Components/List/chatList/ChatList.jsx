@@ -5,14 +5,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { doc, onSnapshot, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../../lib/firebase.js";
 import { chatAction } from "../../../Store/chatSlice.js";
+import EditUser from "./editUser/EditUser.jsx";
 function ChatList() {
   const [addMode, setAddMode] = useState(false);
   const [input, setInput] = useState("");
   const [chats, setChats] = useState([]);
 
   const currentUser = useSelector((state) => state.user.user);
+  const editUser = useSelector((state) => state.user.editUser);
 
   const dispatch = useDispatch();
+
   useEffect(() => {
     const unsub = onSnapshot(
       doc(db, "userChats", currentUser.id),
@@ -66,6 +69,8 @@ function ChatList() {
     } catch (error) {
       console.log(error);
     }
+
+    
   };
 
   const filteredChats = chats.filter((c) =>
@@ -118,6 +123,7 @@ function ChatList() {
       ))}
 
       {addMode && <AddUser />}
+      {editUser && <EditUser />}
     </div>
   );
 }

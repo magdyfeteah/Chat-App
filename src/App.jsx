@@ -10,10 +10,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUserInfo } from "./Store/userSlice";
 
 const App = () => {
-  const {cuurentUser,isLoading} = useSelector((state) => state.user);
  
+  const currentUser  = useSelector((state) => state.user.user);
+  const isLoading = useSelector((state) => state.user.isLoading);
   const chatId = useSelector((state) => state.chat.chatId);
-  
+  const showDetail = useSelector((state) => state.ui.showDetail);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -32,11 +34,11 @@ const App = () => {
 
   return (
     <div className="container">
-      {cuurentUser ? (
+      {currentUser ? (
         <>
           <List />
           {chatId && <Chat />}
-          {/* {chatId && <Detail />} */}
+          {chatId &&showDetail &&<Detail />}
         </>
       ) : (
         <Login />
