@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 function EditUser() {
   const currentUser = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
+  const [loading , setLoading] = useState(false)
   const [avatar, setAvatar] = useState({
     file: null,
     url: "",
@@ -31,7 +32,7 @@ function EditUser() {
     let avatarUrl = currentUser.avatar; 
 
     try {
-     
+     setLoading(true)
       if (avatar.file) {
         const storageRef = ref(storage, `images/${currentUser.id}/${avatar.file.name}`);
         await uploadBytes(storageRef, avatar.file);
@@ -57,6 +58,7 @@ function EditUser() {
     }
     setAvatar({ file: null, url: "" });
     dispatch(changeUser())
+    setLoading(false)
   };
 
   return (
@@ -74,7 +76,7 @@ function EditUser() {
           style={{ display: "none" }}
           onChange={handleAvatar}
         />
-        <button>Edit</button>
+        <button>{loading ? "Loading...":"Edit"}</button>
         <button type="button" onClick={() => dispatch(changeUser())}>Cancel</button>
       </form>
     </div>
